@@ -21,7 +21,10 @@ pipeline {
         stage ('deploy') {
 
             steps {
-               sh "scp target/maven-web-application.war  ec2-user@54.158.8.136:/opt/tomcat9/webapps/"
+               sh """
+               docker build -t tomcat_custom_img:v1 .
+               docker run --name tomcat_container1 -p 5050:8080 -d tomcat_custom_img:v1
+               """
                     
                 }
         }

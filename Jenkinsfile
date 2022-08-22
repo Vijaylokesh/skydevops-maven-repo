@@ -23,7 +23,8 @@ pipeline {
             steps {
                sh """
                sudo docker build -t tomcat_custom_img:v1 .
-               sudo docker run --name tomcat_container1 -p 5060:8080 -d tomcat_custom_img:v1
+               sudo docker run --name tomcat_container1 -p 6060:8080 -d tomcat_custom_img:v1
+               
                """
                     
                 }

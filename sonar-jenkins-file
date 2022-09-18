@@ -1,0 +1,102 @@
+
+Skip to content
+Pull requests
+Issues
+Marketplace
+Explore
+@Vijaylokesh
+Vijaylokesh /
+skydevops-maven-repo
+Public
+forked from sushmitha2506/skydevops-maven-repo
+
+Code
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+
+    Settings
+
+skydevops-maven-repo/Jenkinsfile
+@Vijaylokesh
+Vijaylokesh Update Jenkinsfile
+Latest commit 394a0d6 4 hours ago
+History
+2 contributors
+@Vijaylokesh
+@bharath1
+55 lines (50 sloc) 1.07 KB
+pipeline {
+  environment {
+    dockerimagename = "vijaylokesh/my-tomcat"
+    registry = "https://hub.docker.com/"
+    registryCredential = 'my-docker-private-id'
+    dockerImage = ""	  
+	  
+    }
+	tools{
+        maven '3.8.6'
+    }
+  agent {
+  label 'my-docker-slave'
+  }
+  stages {
+    stage('Cloning Git') {
+      steps {
+        checkout scm
+      }
+	}
+	
+	stage ('Sonar_Scan') {
+
+            steps {
+               script{
+                   dir("/var/lib/jenkins/workspace/${JOB_NAME}/")
+                   {
+                   withSonarQubeEnv('SonarQube') {
+                       sh '/opt/sonar-scanner/bin/sonar-scanner -X -Dproject.settings=sonar.properties/sonar-project-devops.properties'
+                   }
+                   sleep(100)
+                   timeout(time: 10, unit: 'MINUTES') {
+                       waitForQualityGate abortPipeline: true
+                   }
+                   }
+                }
+               
+               
+            }
+        }
+
+   stage ('Build Package') {
+
+            steps {
+               sh 'mvn clean package'
+            }
+        }
+        
+        
+    stage('Building image') {
+      steps{
+        script {
+         
+         dockerImage = docker.build dockerimagename
+        }
+      }
+    }
+    stage('Pushing Image') {
+      steps{
+        script {
+          docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
+            dockerImage.push("${env.BUILD_NUMBER}")
+            dockerImage.push("latest")
+          }
+        }
+      }
+    }
+	
+	
+  }
+} 

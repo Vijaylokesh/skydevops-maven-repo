@@ -23,10 +23,10 @@ pipeline {
 
             steps {
                script{
-                   dir("/var/lib/jenkins/workspace/${JOB_NAME}/")
+                   /*dir("/var/lib/jenkins/workspace/${JOB_NAME}/")
                    {
                    withSonarQubeEnv('SonarQube') {
-                       sh '/opt/sonar-scanner/bin/sonar-scanner -X -Dproject.settings=sonar.properties/sonar-project-devops.properties'
+                       sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar'
                    }
                    sleep(100)
                    timeout(time: 10, unit: 'MINUTES') {

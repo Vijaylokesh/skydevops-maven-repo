@@ -1,9 +1,9 @@
 pipeline {
   environment {
-     dockerimagename = "vijaylokesh/my-tomcat"
+    dockerimagename = "vijaylokesh/my-tomcat"
     registry = "https://hub.docker.com/"
-    registry_path = 'repository/docker/vijaylokesh/my-tomcat'
     registryCredential = 'my-docker-private-id'
+    registry_path = 'repository/docker/vijaylokesh/my-tomcat'
     dockerImage = ''
     imageName = "skydevops"
     }
@@ -35,9 +35,6 @@ pipeline {
       }
     }
     stage('Pushing Image') {
-      environment {
-               registryCredential = 'my-docker-private-id'
-           }
       steps{
         script {
           docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {

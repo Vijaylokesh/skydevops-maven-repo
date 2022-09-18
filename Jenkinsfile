@@ -3,9 +3,8 @@ pipeline {
     dockerimagename = "vijaylokesh/my-tomcat"
     registry = "https://hub.docker.com/"
     registryCredential = 'my-docker-private-id'
-    registry_path = 'repository/docker/vijaylokesh/my-tomcat'
-    dockerImage = ''
-    imageName = "skydevops"
+    dockerImage = ""	  
+	  
     }
 	tools{
         maven '3.8.6'

@@ -19,25 +19,25 @@ pipeline {
       }
 	}
 	
-	stage ('Sonar_Scan') {
 
-            steps {
-               script{
-                   {
-                   withSonarQubeEnv('SonarQube') {
-                       sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar'
-                   }
-                   sleep(100)
-                   timeout(time: 10, unit: 'MINUTES') {
-                       waitForQualityGate abortPipeline: true
-                     }
-                   }
-                 }
-               }
-               
-            }
+  
+    stage('Scan') {
+      steps {
+        withSonarQubeEnv(installationName: 'SonarQube') { 
+          sh 'mvn clean package sonar:sonar'
         }
+      }
+    
 
+   }
+   stage("Quality Gate") {
+      steps {
+        timeout(time: 2, unit: 'MINUTES') {
+          waitForQualityGate abortPipeline: true
+        }
+      }
+    }
+   
    stage ('Build Package') {
 
             steps {
@@ -63,7 +63,7 @@ pipeline {
           }
         }
       }
-    }
+     }
 	
 	
   }

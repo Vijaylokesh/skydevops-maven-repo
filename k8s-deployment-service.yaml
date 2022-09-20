@@ -19,7 +19,7 @@ spec:
       - name: my-registry-key
       containers:
       - name: skydevops-container
-        image: vijaylokesh/my-tomcat:59
+        image: vijaylokesh/my-tomcat:2
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

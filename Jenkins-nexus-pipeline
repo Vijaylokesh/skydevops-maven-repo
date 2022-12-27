@@ -22,13 +22,14 @@ pipeline {
 
        // Building Docker images
     stage('Building image') {
-      steps{
         environment {
         imageName = "elevendevops"
         registryCredentials = "nexus"
         registry = "ec2-3-208-86-119.compute-1.amazonaws.com:8085/"
         dockerImage = ''
     }
+      steps{
+        
         script {
           dockerImage = docker.build imageName
         }

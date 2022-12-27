@@ -1,0 +1,37 @@
+pipeline {
+    agent {
+            label 'master'
+            }
+
+    stages {
+        stage ('Checkout SCM') {
+
+            steps {
+               checkout scm
+            }
+        }
+
+
+     // Stopping Docker containers for cleaner Docker run
+    stage('stop previous containers') {
+         steps {
+            sh 'docker ps -f name=elevendevops -q | xargs --no-run-if-empty docker container stop'
+            sh 'docker container ls -a -fname=elevendevops -q | xargs -r docker container rm'
+         }
+       }
+      
+    stage('Docker Run') {
+       steps{
+         script {
+                docker.withRegistry( 'http://'+registry, registryCredentials ) {
+                dockerImage.pull('latest')
+                
+             }
+             sh 'docker run -d -p 80:80 --rm --name elevendevops ' + registry + imageName
+
+         }
+      }   // Building Docker images
+    
+    }
+  }
+}

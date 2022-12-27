@@ -1,9 +1,8 @@
 pipeline {
     agent any
-    tools{
-        maven 'maven3.8.6'
-    }
+   
      environment {
+        maven= 'maven3.8.6'
         imageName = "elevendevops"
         registryCredentials = "nexus"
         registry = "ec2-3-208-86-119.compute-1.amazonaws.com:8085/"

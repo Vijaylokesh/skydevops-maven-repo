@@ -5,6 +5,13 @@ pipeline {
 
     stages {
         stage ('Checkout SCM') {
+         agent any
+           environment {
+        imageName = "elevendevops"
+        registryCredentials = "nexus"
+        registry = "ec2-3-208-86-119.compute-1.amazonaws.com:8085/"
+        dockerImage = ''
+    }
 
             steps {
                checkout scm
@@ -15,16 +22,11 @@ pipeline {
        // Building Docker images
     stage('Building image') {
          
-        environment {
-        imageName = "elevendevops"
-        registryCredentials = "nexus"
-        registry = "ec2-3-208-86-119.compute-1.amazonaws.com:8085/"
-        dockerImage = ''
-    }
+      
       steps{
         
         script {
-          dockerImage = sudo docker.build imageName
+          dockerImage =  docker.build imageName
         }
       }
     }

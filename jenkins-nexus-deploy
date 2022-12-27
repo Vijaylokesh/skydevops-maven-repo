@@ -2,6 +2,12 @@ pipeline {
     agent {
             label 'master'
             }
+     environment {
+        imageName = "elevendevops"
+        registryCredentials = "nexus"
+        registry = "ec2-3-208-86-119.compute-1.amazonaws.com:8085/"
+        dockerImage = ''
+    }       
 
     stages {
         stage ('Checkout SCM') {
@@ -30,7 +36,7 @@ pipeline {
              sh 'docker run -d -p 80:80 --rm --name elevendevops ' + registry + imageName
 
          }
-      }   // Building Docker images
+      }  
     
     }
   }

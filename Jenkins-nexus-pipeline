@@ -1,7 +1,7 @@
 pipeline {
     agent {
-    label 'my-docker-slave'
-    }
+            label 'my-docker-slave'
+            }
 
     stages {
         stage ('Checkout SCM') {
@@ -11,17 +11,35 @@ pipeline {
             }
         }
 
-        stage ('Build') {
 
-           tools{
-             maven 'maven3.8.6'
-         }
-            steps {
-               sh 'mvn clean package'
-            }
+       // Building Docker images
+    stage('Building image') {
+         
+        environment {
+        imageName = "elevendevops"
+        registryCredentials = "nexus"
+        registry = "ec2-3-208-86-119.compute-1.amazonaws.com:8085/"
+        dockerImage = ''
+    }
+      steps{
+        
+        script {
+          dockerImage = docker.build imageName
         }
+      }
+    }
 
-     
+    // Uploading Docker images into Nexus Registry
+    stage('Uploading to Nexus') {
+         
+     steps{  
+         script {
+             docker.withRegistry( 'http://'+registry, registryCredentials ) {
+             dockerImage.push('latest')
+          }
+        }
+      }
+    }
   
   }
 }

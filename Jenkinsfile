@@ -6,11 +6,12 @@ pipeline {
     dockerImage = ""	  
 	  
     }
-	tools{
+    tools {
         maven '3.8.6'
     }
+	
   agent {
-  label 'my-docker-slave'
+      label 'CI-Jenkins-Slave'
   }
   stages {
     stage('Cloning Git') {
@@ -43,13 +44,7 @@ pipeline {
         }
       }
     }
-	 stage('Deploying App to Kubernetes') {
-      steps {
-        script {
-          kubernetesDeploy(configs: "k8s-deployment-service.yaml", kubeconfigId: "kubernetes-deployment")
-        }
-      }
-    }
+	 
 	
   }
 } 

@@ -1,50 +1,50 @@
 pipeline {
-  environment {
-    dockerimagename = "vijaylokesh/my-tomcat"
+    agent {
+            label 'CD-Jenkins-Slave'
+            }
+    environment {
+    dockerimagename = "vijaylokesh/my-tomcat:latest"
     registry = "https://hub.docker.com/"
     registryCredential = 'my-docker-private-id'
     dockerImage = ""	  
 	  
-    }
-    tools {
-        maven 'maven3.8.6'
-    }
-	
-  agent {
-      label 'CI-Jenkins-Slave'
-  }
-  stages {
-    stage('Cloning Git') {
-      steps {
-        checkout scm
-      }
-	}
-	
-	stage ('Build Package') {
+    }    
+
+    stages {
+        stage ('Checkout SCM') {
 
             steps {
-               sh 'mvn clean package'
+               checkout scm
             }
         }
-    stage('Building image') {
-      steps{
-        script {
+
+
+     // Stopping Docker containers for cleaner Docker run
+    stage('stop previous containers') {
+         steps {
+            
+            sh 'docker ps -f name=vijaylokesh/my-tomcat -q | xargs --no-run-if-empty docker container stop'
+            sh 'docker container ls -a -fname=vijaylokesh/my-tomcat -q | xargs -r docker container rm'
+         }
+       }
+      
+    stage('Docker Run') {
+       steps{
+          
+          script {
          
-         dockerImage = docker.build dockerimagename
-        }
-      }
+           docker.withRegistry( 'http://'+registry, registryCredentials ) {
+           image = docker.image(dockerimagename)
+           image.pull()
+         
+           sh 'docker run -d -p 80:80 --rm --name vijaylokesh/my-tomcat ' + registry + dockerimagename
+           }
+         }  
+
+         }
+      }  
+    
     }
-    stage('Pushing Image') {
-      steps{
-        script {
-          docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
-            dockerImage.push("${env.BUILD_NUMBER}")
-            dockerImage.push("latest")
-          }
-        }
-      }
-    }
-	 
-	
   }
-} 
+
+

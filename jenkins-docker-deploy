@@ -23,8 +23,8 @@ pipeline {
     stage('stop previous containers') {
          steps {
             
-            sh 'docker ps -f name=vijaylokesh/my-tomcat -q | xargs --no-run-if-empty docker container stop'
-            sh 'docker container ls -a -fname=vijaylokesh/my-tomcat -q | xargs -r docker container rm'
+            sh 'docker ps -f name=vijaylokesh-my-tomcat -q | xargs --no-run-if-empty docker container stop'
+            sh 'docker container ls -a -fname=vijaylokesh-my-tomcat -q | xargs -r docker container rm'
          }
        }
       
@@ -37,7 +37,7 @@ pipeline {
            image = docker.image('dockerimagename')
            image.pull()
          
-           sh 'docker run -d -p 80:80 --rm --name vijaylokesh/my-tomcat ' + registry + dockerimagename
+           sh 'docker run -d -p 80:80 --rm --name vijaylokesh-my-tomcat' + registry + dockerimagename
            }
          }  
 

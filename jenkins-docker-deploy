@@ -2,13 +2,13 @@ pipeline {
     agent {
             label 'CD-Jenkins-Slave'
             }
-     environment {
+    environment {
     dockerimagename = "vijaylokesh/my-tomcat"
     registry = "https://hub.docker.com/"
     registryCredential = 'my-docker-private-id'
     dockerImage = ""	  
 	  
-    }      
+    }    
 
     stages {
         stage ('Checkout SCM') {
@@ -31,10 +31,9 @@ pipeline {
     stage('Docker Run') {
        steps{
          script {
-                docker.withRegistry( 'http://'+registry, registryCredentials ) {
-                dockerImage.pull('latest')
-                
-             }
+          docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
+            dockerImage.push("latest")
+          }
              sh 'docker run -d -p 80:80 --rm --name vijaylokesh/my-tomcat ' + registry + imageName
 
          }

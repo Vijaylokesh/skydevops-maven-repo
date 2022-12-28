@@ -3,7 +3,7 @@ pipeline {
             label 'CD-Jenkins-Slave'
             }
     environment {
-    dockerimagename = "vijaylokesh/my-tomcat"
+    dockerimagename = "vijaylokesh/my-tomcat:latest"
     registry = "https://hub.docker.com/"
     registryCredential = 'my-docker-private-id'
     dockerImage = ""	  
@@ -46,4 +46,5 @@ pipeline {
     
     }
   }
+
 

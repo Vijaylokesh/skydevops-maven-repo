@@ -34,10 +34,10 @@ pipeline {
           script {
          
            docker.withRegistry('https://registry.hub.docker.com', registryCredential ) {
-           image = docker.image('dockerimagename')
+           image = docker.image('vijaylokesh/my-tomcat:latest')
            image.pull()
          
-           sh 'docker run -d -p 80:80 --rm --name vijaylokesh-my-tomcat' + registry + dockerimagename
+           sh "docker run -d -p 8080:8080 --rm --name vijaylokesh-my-tomcat registry.hub.docker.com/vijaylokesh/my-tomcat:latest"
            }
          }  
 

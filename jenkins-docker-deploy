@@ -5,9 +5,10 @@ pipeline {
     
     environment {
     dockerimagename = "vijaylokesh/my-tomcat:latest"
-    registry = "https://hub.docker.com/"
+    registry_name = "registry.hub.docker.com"
+    registry_url = "https://registry.hub.docker.com"
     registryCredential = 'my-docker-private-id'
-    container_name= 'vijaylokesh-my-tomcat'
+    container_name= "vijaylokesh-my-tomcat"
 	  
     }    
 
@@ -24,8 +25,10 @@ pipeline {
     stage('stop previous containers') {
          steps {
             
-            sh 'docker ps -f name=container_name -q | xargs --no-run-if-empty docker container stop'
-            sh 'docker container ls -a -fname=container_name -q | xargs -r docker container rm'
+            
+            sh 'docker ps -f name=$container_name -q | xargs --no-run-if-empty docker container stop'
+            sh 'docker container ls -a -fname=$container_name -q | xargs -r docker container rm'
+            
          }
        }
       
@@ -34,12 +37,12 @@ pipeline {
           
           script {
          
-           docker.withRegistry('https://registry.hub.docker.com', registryCredential ) {
-           image = docker.image('vijaylokesh/my-tomcat:latest')
+           docker.withRegistry(registry_url, registryCredential ) {
+           image = docker.image(dockerimagename)
            image.pull()
-         
-           sh "docker run -d -p 8080:8080 --rm --name container_name registry.hub.docker.com/vijaylokesh/my-tomcat:latest"
            }
+           sh 'docker run -d -p 8080:8080 --rm --name $container_name  $registry_name/$dockerimagename'
+           
          }  
 
          }
@@ -47,5 +50,3 @@ pipeline {
     
     }
   }
-
-

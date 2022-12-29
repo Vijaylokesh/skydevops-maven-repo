@@ -1,9 +1,9 @@
 pipeline {
   environment {
     dockerimagename = "vijaylokesh/my-tomcat"
-    registry = "https://registry.hub.docker.com"
+    registry_url = "https://registry.hub.docker.com"
     registryCredential = 'my-docker-private-id'
-    dockerImage = ""	  
+    	  
 	  
     }
     tools {
@@ -37,7 +37,7 @@ pipeline {
     stage('Pushing Image') {
       steps{
         script {
-          docker.withRegistry( registry, registryCredential ) {
+          docker.withRegistry( registry_url, registryCredential ) {
             dockerImage.push("${env.BUILD_NUMBER}")
             dockerImage.push("latest")
           }

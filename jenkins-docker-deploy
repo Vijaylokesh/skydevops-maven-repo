@@ -1,12 +1,13 @@
 pipeline {
-    agent {
-            label 'CD-Jenkins-Slave'
-            }
+   agent {
+       label 'CD-Jenkins-Slave'
+    }
+    
     environment {
     dockerimagename = "vijaylokesh/my-tomcat:latest"
     registry = "https://hub.docker.com/"
     registryCredential = 'my-docker-private-id'
-    dockerImage = ""	  
+    container_name= 'vijaylokesh-my-tomcat'
 	  
     }    
 
@@ -23,8 +24,8 @@ pipeline {
     stage('stop previous containers') {
          steps {
             
-            sh 'docker ps -f name=vijaylokesh-my-tomcat -q | xargs --no-run-if-empty docker container stop'
-            sh 'docker container ls -a -fname=vijaylokesh-my-tomcat -q | xargs -r docker container rm'
+            sh 'docker ps -f name=container_name -q | xargs --no-run-if-empty docker container stop'
+            sh 'docker container ls -a -fname=container_name -q | xargs -r docker container rm'
          }
        }
       
@@ -37,7 +38,7 @@ pipeline {
            image = docker.image('vijaylokesh/my-tomcat:latest')
            image.pull()
          
-           sh "docker run -d -p 8080:8080 --rm --name vijaylokesh-my-tomcat registry.hub.docker.com/vijaylokesh/my-tomcat:latest"
+           sh "docker run -d -p 8080:8080 --rm --name container_name registry.hub.docker.com/vijaylokesh/my-tomcat:latest"
            }
          }  
 

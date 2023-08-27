@@ -10,7 +10,7 @@ pipeline {
         maven 'maven3.8.6'
     }
   agent {
-  label 'my-docker-slave'
+  label 'jenkins-slave'
   }
   stages {
     stage('Cloning Git') {

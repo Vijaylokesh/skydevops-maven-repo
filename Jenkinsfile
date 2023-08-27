@@ -1,6 +1,6 @@
 pipeline {
   environment {
-    dockerimagename = "vijaylokesh/my-tomcat"
+    dockerimagename = "elevendevops/myelevendevopsimage"
     registry = "https://hub.docker.com/"
     registryCredential = 'my-docker-private-id'
     dockerImage = ""	  
@@ -43,13 +43,7 @@ pipeline {
         }
       }
     }
-	 stage('Deploying App to Kubernetes') {
-      steps {
-        script {
-          kubernetesDeploy(configs: "k8s-deployment-service.yaml", kubeconfigId: "kubernetes-deployment")
-        }
-      }
-    }
+	
 	
   }
 } 
